@@ -1,5 +1,6 @@
 package br.com.springboot.curso_jdev_treinamento.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,12 +8,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.springboot.curso_jdev_treinamento.model.Usuario;
+import br.com.springboot.curso_jdev_treinamento.repository.UsuarioRepository;
+
 /**
  *
  * A sample greetings controller to return greeting text
  */
 @RestController
 public class GreetingsController {
+	
+	@Autowired //IC/CD OU CDI - Injeção de dependencia
+	private UsuarioRepository usuarioRepository;
     /**
      *
      * @param name the name to greet
@@ -25,7 +32,12 @@ public class GreetingsController {
     }
     @RequestMapping(value = "/olamundo/{name}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public String olsMundo(@PathVariable String name) {
+    public String olaMundo(@PathVariable String name) {
+    	
+    	Usuario usuario = new Usuario();
+    	usuario.setNome(name);
+    	
+    	usuarioRepository.save(usuario); // grava no bando de dados
         return "OLA MUNDO: " + name + "!";
     }
 }
